@@ -36,3 +36,4 @@ table(sex_char)
 #can be used to get counts of things within a data set by following this (above)
 
 dir.create("class_notes")
+
