@@ -14,3 +14,7 @@ install.packages("tidyverse")
 install.packages("tidyr")
 
 dvst <- read_csv("https://raw.githubusercontent.com/vsbuffalo/bds-files/master/chapter-08-r/Dataset_S1.txt")
+dvst
+head(dvst)
+tail(dvst)
+nrow(dvst)
