@@ -46,3 +46,16 @@ filter(dvst, `Divergence` > 1)
 filter(dvst, `Divergence`== max(`Divergence`))
 filter(dvst, between(`%GC`, mean(`%GC`)-5, mean(`%GC`)+5))
 nrow(filter(dvst, cent))
+#arrange is basically the sort function, looks at first column first and uses the second column to break ties
+arrange(dvst, cent, `%GC`)
+#select lets you select only a few colums at once instead of all of them
+dvst <- rename(dvst, total.SNPs = `total SNPs`,
+               total.Bases = `total Bases`,
+               unique.SNPs = `unique SNPs`,
+               reference.Bases = `reference Bases`,
+               percent.GC = `%GC`) #renaming all the columns that require ` `!
+colnames(dvst)
+summarise(dvst, GC = mean(percent.GC, na.rm = TRUE), averageSNPs=mean(total.SNPs, 
+                                                                      na.rm = TRUE), allSNPs=sum(total.SNPs))
+by_cent <- group_by(dvst, cent)
+summarise(by_cent, GC = mean(percent.GC, na.rm = TRUE), averageSNPs=mean(total.SNPs, na.rm = TRUE), allSNPs=sum(total.SNPs))
