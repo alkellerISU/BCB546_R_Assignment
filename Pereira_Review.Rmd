@@ -1,0 +1,74 @@
+---
+title: "Pereira_Review"
+output: html_document
+date: "2023-03-13"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# For the code itself, there should be an R markdown file that allows you to "run all" commands. This is an example of what the R markdown should look like. The readme file is for writing a description of your github repository ("file Maize_Part_A_10 includes ..."). To open a new R markdown file, go to File -> New File -> R markdown. To add new code, hit Code -> Insert Chunk. When writing notes in R, be sure to include a "#" first, otherwise it will interfere with your code. 
+
+# Data inspection:
+```{r}
+# str() gives basically everything you need! Here are some additional commands that can help de-condense the characteristics:
+typeof()
+sapply()
+dim()
+```
+
+# Data Processing:
+```{r}
+# The code for the new Teosinte and Maize directory is there, but it doesn't seem like it got ran (or committed and pushed). The files are "free floating" on github. I ran it, and it for sure works!
+
+# For:
+Missing_Q_Maize <- as_tibble(lapply(chr_maize, gsub, pattern ="-", replacement ="?", fixed = TRUE)) #replaces -/- for missing data with ?/?
+## I don't believe that we originally have NAs with "-/-", so this code may not be necessary. 
+
+# When ordering based on ascending and descending positions for both teosinte and maize, they are ordered based on the last few unit places (as in "12....", "13.......", "21...") . Here is some code that may help if placed into loop instead of arrange: 
+[order(as.numeric(as.character(Name_of_your_object$Position))),] # incooperating as.numeric and as.character into your current code may also work. 
+
+# For the homework, we want the file to be organized as: "first column is "SNP_ID", the second column is "Chromosome", the third column is "Position", and subsequent columns are genotype data from either maize or teosinte individuals". All other columns must be removed: 
+maize_genotypes <- maize_genotypes[,!names(maize_genotypes) %in% c("JG_OTU", "Group")]
+snp_positions <- snp_positions[ , c("SNP_ID", "Chromosome","Position")]
+
+# I do not believe that part C is in the R assignment. 
+```
+
+# Data Visualization: 
+```{r}
+# The chromosomes across all samples looks great! although, it doesn't look like the original data, Fang_et_al_genotypes, got filtered for teosinte and maize Groups. For this portion of the assignment, we also want to compare samples (teosinte and maize). After you have filtered out your desired groups (summation of both teosinte and maize groups), create a new column based on sample. Note that this code begins after you remove the unecessary columns. 
+## filter: 
+fang_new <- Fang_et_al_genotypes %>% pivot_longer(!c(Sample_ID, Group), names_to="SNP_ID", values_to= "allele")
+Subsetted <- filter(fang_new, Group %in% c("ZMMIL","ZMMLR","ZMMMR","ZMPBA","ZMPIL","ZMPJA"))
+colnames(Subsetted) [1] <- "SNP_ID"
+snp_vis_2 <- merge(Subsetted, your_prepped_snp_pos_file, by="SNP_ID")
+## add new column: 
+Subsetted_SNPs <- snp_vis_2 %>% 
+  mutate(
+    type = if_else(
+      condition = Group %in% c("ZMMIL","ZMMLR","ZMMMR"), 
+      true      = "Maize", 
+      false     = "Teosinte"
+    ), 
+  )
+## Now you can use ggplot to compare samples
+
+# I suggest taking a peak at the tidy_genotypes object. It looks like both NA and homozygosity got placed under on header - it is best if they are seperated, sice we are asked to look at the proportion of heterozygous vs. homozygous site between each sample and group, and the proportion of missing values between each sample and group. Additionally, the first homozygosity/NA plot did not show up after typing Samples_Plot, which suggests it may not be functional. Using the above "mutate" code can also be used for homozygous vs. heterozygous, and NA vs. not missing. 
+
+## example for hetero vs. homo: 
+Subsetted_SNPs <- snp_vis_2 %>% 
+  mutate(
+    homozygosity = if_else(
+      condition = allele %in% c("A/A","T/T","G/G","C/C"), 
+      true      = "homozygous", 
+      false     = "heterozygous"
+    ), 
+  )
+
+## after getting your desired homozygous vs. heterozygous + missing vs. not_missing columns, you can you ggplot to do the comparisons. You seem to have ggplot down. 
+```
+
+# I loved the commands for sending files into a particular directory! Super helpful. 
+
