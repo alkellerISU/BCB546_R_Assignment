@@ -1,0 +1,19 @@
+---
+title: "review"
+author: "Yue Liu"
+date: "2023-03-14"
+output: html_document
+---
+
+
+# Good
+There is no chocked chunks, great!
+Graphs are pretty!
+Output data management is great, as all output files are redirected to other directories.
+
+# Might improve
+A R.markdown file is missing. 
+
+
+Thank you!
+Yue
