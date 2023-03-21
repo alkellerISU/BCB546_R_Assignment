@@ -13,6 +13,7 @@ Output data management is great, as all output files are redirected to other dir
 
 # Might improve
 A R.markdown file is missing. 
+In data visualization part, didn't answer the question "Are there more SNP positions in maize or teosinte individuals?"
 
 
 Thank you!
